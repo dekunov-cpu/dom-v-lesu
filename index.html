@@ -1135,5 +1135,19 @@
     el.style.transitionDelay = (i * 0.1) + 's';
   });
 </script>
+<script>
+function toggleMenu() {
+  document.getElementById('navLinks').classList.toggle('open');
+  document.querySelector('.nav-burger').classList.toggle('open');
+}
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.nav-links a').forEach(function(a) {
+    a.addEventListener('click', function() {
+      document.getElementById('navLinks').classList.remove('open');
+      document.querySelector('.nav-burger').classList.remove('open');
+    });
+  });
+});
+</script>
 </body>
 </html>
