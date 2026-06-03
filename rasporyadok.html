@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Распорядок дня — Дом в лесу</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #2d4a2d;
+    --forest-mid: #3d6b3d;
+    --gold: #b8943f;
+    --cream: #f5f0e8;
+    --warm: #e8ddc8;
+    --text: #1a2a1a;
+    --muted: #5a6a5a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Raleway', sans-serif; background: var(--cream); color: var(--text); }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 48px;
+    background: rgba(245,240,232,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(45,74,45,0.12);
+  }
+
+  /* HERO */
+  .hero {
+    padding: 120px 10vw 64px;
+    text-align: center;
+    background: linear-gradient(to bottom, var(--warm), var(--cream));
+    border-bottom: 1px solid rgba(45,74,45,0.1);
+  }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 16px;
+  }
+  .eyebrow::before, .eyebrow::after {
+    content: ''; display: block; width: 24px; height: 1px; background: var(--gold);
+  }
+  h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5vw, 4rem); color: var(--forest); margin-bottom: 12px; }
+  h1 em { font-style: italic; color: #5a8f5a; }
+  .hero-tagline { font-family: 'Playfair Display', serif; font-style: italic; color: var(--gold); font-size: 1.1rem; margin-bottom: 12px; }
+  .hero-sub { color: var(--muted); font-size: 1rem; font-weight: 300; line-height: 1.7; max-width: 520px; margin: 0 auto; }
+
+  /* LEGEND */
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 10px 24px;
+    justify-content: center;
+    padding: 32px 10vw;
+    background: var(--cream);
+    border-bottom: 1px solid rgba(45,74,45,0.08);
+  }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--muted); }
+  .legend-dot { width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0; }
+
+  /* SCHEDULE */
+  .schedule { padding: 48px 10vw 80px; max-width: 1000px; margin: 0 auto; }
+
+  .week-note {
+    background: rgba(45,74,45,0.06); border: 1px solid rgba(45,74,45,0.12);
+    border-radius: 4px; padding: 20px 28px; margin-bottom: 40px;
+    font-size: 0.88rem; color: var(--muted); line-height: 1.7;
+  }
+  .week-note strong { color: var(--forest); }
+
+  .day-section { margin-bottom: 20px; }
+  .day-header {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 2px;
+  }
+  .day-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; color: var(--forest); font-weight: 700;
+    min-width: 120px;
+  }
+  .day-tag {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--gold);
+    background: rgba(184,148,63,0.1);
+    padding: 3px 10px; border-radius: 20px;
+  }
+
+  .time-rows { border-radius: 4px; overflow: hidden; border: 1px solid rgba(45,74,45,0.08); }
+
+  .time-row {
+    display: grid; grid-template-columns: 80px 1fr;
+    border-bottom: 1px solid rgba(45,74,45,0.06);
+    transition: background 0.15s;
+  }
+  .time-row:last-child { border-bottom: none; }
+  .time-row:hover { filter: brightness(0.97); }
+
+  .time-cell {
+    padding: 14px 16px;
+    font-size: 0.8rem; font-weight: 700; color: var(--forest);
+    border-right: 2px solid rgba(45,74,45,0.08);
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(245,240,232,0.7);
+    letter-spacing: 0.03em;
+  }
+
+  .act-cell {
+    padding: 14px 20px;
+    font-size: 0.88rem; line-height: 1.5; color: var(--text);
+    display: flex; align-items: center;
+  }
+
+  .act-note {
+    font-size: 0.75rem; color: var(--muted); margin-left: 8px;
+    font-style: italic;
+  }
+
+  /* Category colors */
+  .bg-wake    { background: #e8f0e8; }
+  .bg-hygiene { background: #edf4f7; }
+  .bg-body    { background: #e0f0f5; }
+  .bg-food    { background: #fdf5e4; }
+  .bg-reflect { background: #f0ede0; }
+  .bg-task    { background: #f5f0d8; }
+  .bg-group   { background: #e8e0f5; }
+  .bg-phone   { background: #e0f0e8; }
+  .bg-tea     { background: #fdf0e0; }
+  .bg-fun     { background: #e8f5e8; }
+  .bg-sleep   { background: #d8e8d8; }
+  .bg-special { background: #fde8e8; }
+  .bg-travel  { background: #ffeedd; }
+
+  /* SPECIAL DAYS BLOCK */
+  .special-days {
+    padding: 0 10vw 80px;
+    max-width: 1000px; margin: 0 auto;
+  }
+  .special-grid {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 20px;
+    margin-top: 24px;
+  }
+  .special-card {
+    padding: 28px; border-radius: 4px;
+    border: 1px solid rgba(45,74,45,0.1);
+  }
+  .special-card.sat { background: rgba(255,238,221,0.5); border-color: rgba(184,148,63,0.2); }
+  .special-card.sun { background: rgba(232,224,245,0.5); border-color: rgba(130,100,200,0.15); }
+  .special-card.fri { background: rgba(253,232,232,0.5); border-color: rgba(200,100,100,0.12); }
+  .special-card h3 { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--forest); margin-bottom: 12px; }
+  .special-card p { font-size: 0.83rem; color: var(--muted); line-height: 1.65; }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; color: var(--forest); margin-bottom: 8px;
+  }
+  .section-sub { font-size: 0.88rem; color: var(--muted); margin-bottom: 28px; }
+
+  /* FOOTER */
+  footer {
+    background: #1a2a1a; color: rgba(245,240,232,0.5);
+    padding: 40px 10vw; text-align: center;
+    font-size: 0.8rem; line-height: 1.8;
+  }
+  footer a { color: rgba(184,148,63,0.8); text-decoration: none; }
+  .footer-brand { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #f5f0e8; margin-bottom: 6px; }
+  .footer-tag { font-style: italic; color: rgba(184,148,63,0.6); margin-bottom: 12px; font-family: 'Playfair Display', serif; }
+
+  @media (max-width: 700px) {
+    nav { padding: 16px 20px; }
+    .hero { padding: 100px 24px 48px; }
+    .schedule, .special-days { padding-left: 20px; padding-right: 20px; }
+    .special-grid { grid-template-columns: 1fr; }
+    .legend { padding: 24px 20px; }
+    .day-name { min-width: 90px; font-size: 0.95rem; }
+  }
+
+  /* ── NAV MENU ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 48px;
+    background: rgba(245,240,232,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(45,74,45,0.12);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; color: var(--forest);
+    text-decoration: none; z-index: 101;
+  }
+  .nav-links {
+    display: flex; gap: 28px; list-style: none;
+    align-items: center;
+  }
+  .nav-links a {
+    text-decoration: none; color: var(--muted);
+    font-size: 0.8rem; font-weight: 500; letter-spacing: 0.08em;
+    text-transform: uppercase; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--forest); }
+  .nav-cta {
+    background: var(--forest) !important; color: var(--cream) !important;
+    padding: 9px 20px; border-radius: 2px;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--forest-mid) !important; }
+  .nav-burger {
+    display: none; flex-direction: column; gap: 5px;
+    background: none; border: none; cursor: pointer;
+    padding: 4px; z-index: 101;
+  }
+  .nav-burger span {
+    display: block; width: 24px; height: 2px;
+    background: var(--forest); border-radius: 2px;
+    transition: all 0.3s;
+  }
+  .nav-burger.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+  .nav-burger.open span:nth-child(2) { opacity: 0; }
+  .nav-burger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+  @media (max-width: 800px) {
+    nav { padding: 16px 20px; }
+    .nav-burger { display: flex; }
+    .nav-links {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(245,240,232,0.98);
+      flex-direction: column; justify-content: center; align-items: center;
+      gap: 28px; display: none;
+    }
+    .nav-links.open { display: flex; }
+    .nav-links a { font-size: 1.1rem; }
+    .nav-cta { padding: 12px 32px !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Дом в лесу</a>
+  <button class="nav-burger" onclick="toggleMenu()" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="programma.html">Программа</a></li>
+    <li><a href="rasporyadok.html">Распорядок</a></li>
+    <li><a href="pravila.html">Правила</a></li>
+    <li><a href="o-nas.html">О нас</a></li>
+    <li><a href="novosti.html">Новости</a></li>
+    <li><a href="kontakty.html" class="nav-cta">Связаться</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="eyebrow">Программа · 28 дней · Кокошкино</div>
+  <h1>Распорядок <em>дня</em></h1>
+  <p class="hero-tagline">Мы рядом. Но путь — твой.</p>
+  <p class="hero-sub">Каждый день — это работа. Внутренняя и физическая. Не лечение, а возвращение к себе.</p>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#e8f0e8"></div> Утро</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#edf4f7"></div> Гигиена</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#e0f0f5"></div> Физическое</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#fdf5e4"></div> Еда / дежурство</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f0ede0"></div> Размышление</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f5f0d8"></div> Задания</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#e8e0f5"></div> Группы</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#e0f0e8"></div> Звонки</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#fdf0e0"></div> Чаепитие</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#e8f5e8"></div> Отдых / игры</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#d8e8d8"></div> Медитация / сон</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#fde8e8"></div> Особые события</div>
+</div>
+
+<!-- SCHEDULE -->
+<div class="schedule">
+
+  <div class="week-note">
+    <strong>Ежедневно:</strong> Звонки близким — 17:00. Вечерняя группа самопомощи — со спикером по возможности каждый день. Чаепитие после группы — живое общение. Дежурства по кухне и уборке — по очерёдности.<br>
+    <strong>Особые дни:</strong> Среда — арт-терапия. Пятница — приезд спикера. Суббота — выезд на городскую группу АА/НА (выезд 17:00, группа 19:00, возвращение 21:30–22:00). Воскресенье — группа с выпускниками в 19:00.
+  </div>
+
+  <!-- ПН-ЧТ (базовый день) -->
+  <div class="day-section">
+    <div class="day-header">
+      <div class="day-name">Пн — Чт</div>
+      <div class="day-tag">Обычный день</div>
+    </div>
+    <div class="time-rows">
+      <div class="time-row bg-wake"><div class="time-cell">08:00</div><div class="act-cell">Подъём</div></div>
+      <div class="time-row bg-hygiene"><div class="time-cell">08:10</div><div class="act-cell">Душ, туалет, заправить кровать</div></div>
+      <div class="time-row bg-body"><div class="time-cell">08:40</div><div class="act-cell">Зарядка</div></div>
+      <div class="time-row bg-food"><div class="time-cell">09:10</div><div class="act-cell">Завтрак <span class="act-note">дежурные готовят</span></div></div>
+      <div class="time-row bg-reflect"><div class="time-cell">10:00</div><div class="act-cell">Утреннее размышление <span class="act-note">онлайн трансляция для выпускников</span></div></div>
+      <div class="time-row bg-task"><div class="time-cell">10:30</div><div class="act-cell">Письменные задания <span class="act-note">12 шагов, моральный инвентарь</span></div></div>
+      <div class="time-row bg-food"><div class="time-cell">12:30</div><div class="act-cell">Обед <span class="act-note">дежурные готовят</span></div></div>
+      <div class="time-row bg-group"><div class="time-cell">13:15</div><div class="act-cell">Малая группа <span class="act-note">разбор заданий, 5–6 человек</span></div></div>
+      <div class="time-row bg-body"><div class="time-cell">14:30</div><div class="act-cell">Спортзал / прогулка на улице</div></div>
+      <div class="time-row bg-fun"><div class="time-cell">15:30</div><div class="act-cell">Кинотерапия (1.5 ч) / настольные игры</div></div>
+      <div class="time-row bg-phone"><div class="time-cell">17:00</div><div class="act-cell">Звонки близким / свободное время</div></div>
+      <div class="time-row bg-task"><div class="time-cell">17:30</div><div class="act-cell">Беседа с наставником <span class="act-note">индивидуально</span></div></div>
+      <div class="time-row bg-food"><div class="time-cell">18:00</div><div class="act-cell">Ужин <span class="act-note">дежурные готовят</span></div></div>
+      <div class="time-row bg-group"><div class="time-cell">19:00</div><div class="act-cell">Группа самопомощи <span class="act-note">со спикером по возможности</span></div></div>
+      <div class="time-row bg-tea"><div class="time-cell">20:00</div><div class="act-cell">Чаепитие <span class="act-note">со спикером или без</span></div></div>
+      <div class="time-row bg-reflect"><div class="time-cell">21:00</div><div class="act-cell">Итоги дня — дневник чувств <span class="act-note">письменно</span></div></div>
+      <div class="time-row bg-fun"><div class="time-cell">21:30</div><div class="act-cell">Свободное время <span class="act-note">настольные игры, чтение</span></div></div>
+      <div class="time-row bg-sleep"><div class="time-cell">22:30</div><div class="act-cell">Медитация перед сном</div></div>
+      <div class="time-row bg-sleep"><div class="time-cell">23:00</div><div class="act-cell">Отбой</div></div>
+    </div>
+  </div>
+
+  <!-- СРЕДА -->
+  <div class="day-section" style="margin-top:28px;">
+    <div class="day-header">
+      <div class="day-name">Среда</div>
+      <div class="day-tag">Арт-терапия</div>
+    </div>
+    <div class="time-rows">
+      <div class="time-row bg-wake"><div class="time-cell">08:00</div><div class="act-cell">Подъём</div></div>
+      <div class="time-row bg-hygiene"><div class="time-cell">08:10</div><div class="act-cell">Душ, туалет, заправить кровать</div></div>
+      <div class="time-row bg-body"><div class="time-cell">08:40</div><div class="act-cell">Зарядка</div></div>
+      <div class="time-row bg-food"><div class="time-cell">09:10</div><div class="act-cell">Завтрак <span class="act-note">дежурные готовят</span></div></div>
+      <div class="time-row bg-reflect"><div class="time-cell">10:00</div><div class="act-cell">Утреннее размышление <span class="act-note">онлайн трансляция для выпускников</span></div></div>
+      <div class="time-row bg-task"><div class="time-cell">10:30</div><div class="act-cell">Письменные задания</div></div>
+      <div class="time-row bg-food"><div class="time-cell">12:30</div><div class="act-cell">Обед <span class="act-note">дежурные готовят</span></div></div>
+      <div class="time-row bg-special"><div class="time-cell">13:15</div><div class="act-cell">Арт-терапия <span class="act-note">групповая, 1 раз в неделю</span></div></div>
+      <div class="time-row bg-body"><div class="time-cell">14:30</div><div class="act-cell">Спортзал / прогулка</div></div>
+      <div class="time-row bg-fun"><div class="time-cell">15:30</div><div class="act-cell">Кинотерапия (1.5 ч) / настольные игры</div></div>
+      <div class="time-row bg-phone"><div class="time-cell">17:00</div><div class="act-cell">Звонки близким / свободное время</div></div>
+      <div class="time-row bg-task"><div class="time-cell">17:30</div><div class="act-cell">Беседа с наставником</div></div>
+      <div class="time-row bg-food"><div class="time-cell">18:00</div><div class="act-cell">Ужин</div></div>
+      <div class="time-row bg-group"><div class="time-cell">19:00</div><div class="act-cell">Группа самопомощи + спикер</div></div>
+      <div class="time-row bg-tea"><div class="time-cell">20:00</div><div class="act-cell">Чаепитие</div></div>
+      <div class="time-row bg-reflect"><div class="time-cell">21:00</div><div class="act-cell">Итоги дня — дневник чувств</div></div>
+      <div class="time-row bg-fun"><div class="time-cell">21:30</div><div class="act-cell">Свободное время</div></div>
+      <div class="time-row bg-sleep"><div class="time-cell">22:30</div><div class="act-cell">Медитация перед сном</div></div>
+      <div class="time-row bg-sleep"><div class="time-cell">23:00</div><div class="act-cell">Отбой</div></div>
+    </div>
+  </div>
+
+  <!-- ПЯТНИЦА -->
+  <div class="day-section" style="margin-top:28px;">
+    <div class="day-header">
+      <div class="day-name">Пятница</div>
+      <div class="day-tag">Приезд спикера</div>
+    </div>
+    <div class="time-rows">
+      <div class="time-row bg-wake"><div class="time-cell">08:00</div><div class="act-cell">Подъём</div></div>
+      <div class="time-row bg-hygiene"><div class="time-cell">08:10</div><div class="act-cell">Душ, туалет, заправить кровать</div></div>
+      <div class="time-row bg-body"><div class="time-cell">08:40</div><div class="act-cell">Зарядка</div></div>
+      <div class="time-row bg-food"><div class="time-cell">09:10</div><div class="act-cell">Завтрак</div></div>
+      <div class="time-row bg-reflect"><div class="time-cell">10:00</div><div class="act-cell">Утреннее размышление</div></div>
+      <div class="time-row bg-task"><div class="time-cell">10:30</div><div class="act-cell">Письменные задания</div></div>
+      <div class="time-row bg-food"><div class="time-cell">12:30</div><div class="act-cell">Обед</div></div>
+      <div class="time-row bg-group"><div class="time-cell">13:15</div><div class="act-cell">Малая группа</div></div>
+      <div class="time-row bg-body"><div class="time-cell">14:30</div><div class="act-cell">Спортзал / прогулка</div></div>
+      <div class="time-row bg-fun"><div class="time-cell">15:30</div><div class="act-cell">Кинотерапия / настольные игры</div></div>
+      <div class="time-row bg-phone"><div class="time-cell">17:00</div><div class="act-cell">Звонки близким</div></div>
+      <div class="time-row bg-special"><div class="time-cell">17:30</div><div class="act-cell">Приезд спикера <span class="act-note">беседа, обмен опытом</span></div></div>
+      <div class="time-row bg-food"><div class="time-cell">18:00</div><div class="act-cell">Ужин</div></div>
+      <div class="time-row bg-group"><div class="time-cell">19:00</div><div class="act-cell">Группа самопомощи + спикер</div></div>
+      <div class="time-row bg-tea"><div class="time-cell">20:00</div><div class="act-cell">Чаепитие со спикером</div></div>
+      <div class="time-row bg-reflect"><div class="time-cell">21:00</div><div class="act-cell">Итоги дня — дневник чувств</div></div>
+      <div class="time-row bg-fun"><div class="time-cell">21:30</div><div class="act-cell">Свободное время</div></div>
+      <div class="time-row bg-sleep"><div class="time-cell">22:30</div><div class="act-cell">Медитация перед сном</div></div>
+      <div class="time-row bg-sleep"><div class="time-cell">23:00</div><div class="act-cell">Отбой</div></div>
+    </div>
+  </div>
+
+  <!-- СУББОТА -->
+  <div class="day-section" style="margin-top:28px;">
+    <div class="day-header">
+      <div class="day-name">Суббота</div>
+      <div class="day-tag">Выезд АА/НА</div>
+    </div>
+    <div class="time-rows">
+      <div class="time-row bg-wake"><div class="time-cell">08:00</div><div class="act-cell">Подъём</div></div>
+      <div class="time-row bg-hygiene"><div class="time-cell">08:10</div><div class="act-cell">Душ, туалет, заправить кровать</div></div>
+      <div class="time-row bg-body"><div class="time-cell">08:40</div><div class="act-cell">Зарядка</div></div>
+      <div class="time-row bg-food"><div class="time-cell">09:10</div><div class="act-cell">Завтрак</div></div>
+      <div class="time-row bg-reflect"><div class="time-cell">10:00</div><div class="act-cell">Утреннее размышление</div></div>
+      <div class="time-row bg-task"><div class="time-cell">10:30</div><div class="act-cell">Письменные задания</div></div>
+      <div class="time-row bg-food"><div class="time-cell">12:30</div><div class="act-cell">Обед</div></div>
+      <div class="time-row bg-group"><div class="time-cell">13:15</div><div class="act-cell">Малая группа</div></div>
+      <div class="time-row bg-body"><div class="time-cell">14:30</div><div class="act-cell">Спортзал / свободное время</div></div>
+      <div class="time-row bg-phone"><div class="time-cell">16:00</div><div class="act-cell">Звонки близким / подготовка к выезду</div></div>
+      <div class="time-row" style="background:#ffeedd"><div class="time-cell">17:00</div><div class="act-cell">Выезд на городскую группу АА/НА</div></div>
+      <div class="time-row" style="background:#ffeedd"><div class="time-cell">18:00</div><div class="act-cell">В дороге</div></div>
+      <div class="time-row bg-special"><div class="time-cell">19:00</div><div class="act-cell">Городская группа АА/НА <span class="act-note">начало</span></div></div>
+      <div class="time-row" style="background:#ffeedd"><div class="time-cell">21:00</div><div class="act-cell">Возвращение домой</div></div>
+      <div class="time-row bg-sleep"><div class="time-cell">22:30</div><div class="act-cell">Медитация / отбой</div></div>
+    </div>
+  </div>
+
+  <!-- ВОСКРЕСЕНЬЕ -->
+  <div class="day-section" style="margin-top:28px;">
+    <div class="day-header">
+      <div class="day-name">Воскресенье</div>
+      <div class="day-tag">Группа с выпускниками</div>
+    </div>
+    <div class="time-rows">
+      <div class="time-row bg-wake"><div class="time-cell">08:00</div><div class="act-cell">Подъём</div></div>
+      <div class="time-row bg-hygiene"><div class="time-cell">08:10</div><div class="act-cell">Душ, туалет, заправить кровать</div></div>
+      <div class="time-row bg-body"><div class="time-cell">08:40</div><div class="act-cell">Зарядка</div></div>
+      <div class="time-row bg-food"><div class="time-cell">09:10</div><div class="act-cell">Завтрак</div></div>
+      <div class="time-row bg-reflect"><div class="time-cell">10:00</div><div class="act-cell">Утреннее размышление</div></div>
+      <div class="time-row bg-task"><div class="time-cell">10:30</div><div class="act-cell">Письменные задания</div></div>
+      <div class="time-row bg-food"><div class="time-cell">12:30</div><div class="act-cell">Обед</div></div>
+      <div class="time-row bg-group"><div class="time-cell">13:15</div><div class="act-cell">Малая группа</div></div>
+      <div class="time-row bg-body"><div class="time-cell">14:30</div><div class="act-cell">Спортзал / прогулка</div></div>
+      <div class="time-row bg-fun"><div class="time-cell">15:30</div><div class="act-cell">Кинотерапия / настольные игры</div></div>
+      <div class="time-row bg-phone"><div class="time-cell">17:00</div><div class="act-cell">Звонки близким</div></div>
+      <div class="time-row bg-food"><div class="time-cell">18:00</div><div class="act-cell">Ужин</div></div>
+      <div class="time-row bg-special"><div class="time-cell">19:00</div><div class="act-cell">Группа с выпускниками <span class="act-note">очно + онлайн</span></div></div>
+      <div class="time-row bg-tea"><div class="time-cell">20:00</div><div class="act-cell">Чаепитие с выпускниками</div></div>
+      <div class="time-row bg-reflect"><div class="time-cell">21:00</div><div class="act-cell">Итоги дня — дневник чувств</div></div>
+      <div class="time-row bg-fun"><div class="time-cell">21:30</div><div class="act-cell">Свободное время</div></div>
+      <div class="time-row bg-sleep"><div class="time-cell">22:30</div><div class="act-cell">Медитация перед сном</div></div>
+      <div class="time-row bg-sleep"><div class="time-cell">23:00</div><div class="act-cell">Отбой</div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Дом в лесу</div>
+  <div class="footer-tag">Мы рядом. Но путь — твой.</div>
+  <p>Бесплатная реабилитация · Кокошкино, Московская область<br>
+  <a href="index.html">← Вернуться на главную</a></p>
+</footer>
+
+
+<script>
+function toggleMenu() {
+  const links = document.getElementById('navLinks');
+  const burger = document.querySelector('.nav-burger');
+  links.classList.toggle('open');
+  burger.classList.toggle('open');
+}
+document.querySelectorAll('.nav-links a').forEach(a => {
+  a.addEventListener('click', () => {
+    document.getElementById('navLinks').classList.remove('open');
+    document.querySelector('.nav-burger').classList.remove('open');
+  });
+});
+</script>
+</body>
+</html>

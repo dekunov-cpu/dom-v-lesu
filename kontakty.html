@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Контакты — Дом в лесу</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #2d4a2d; --forest-mid: #3d6b3d; --forest-light: #5a8f5a;
+    --gold: #b8943f; --cream: #f5f0e8; --warm: #e8ddc8;
+    --text: #1a2a1a; --muted: #5a6a5a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Raleway', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 48px;
+    background: rgba(245,240,232,0.95); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(45,74,45,0.12);
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 60vh; display: flex; align-items: flex-end;
+    padding: 130px 10vw 72px;
+    background: linear-gradient(160deg, #1a2e1a 0%, #2d4a2d 100%);
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 70% 40%, rgba(184,148,63,0.1) 0%, transparent 55%);
+    pointer-events: none;
+  }
+  /* forest line art */
+  .hero-art {
+    position: absolute; bottom: 0; right: 5vw;
+    opacity: 0.06; pointer-events: none; width: 320px;
+  }
+
+  .hero-inner { position: relative; z-index: 1; max-width: 620px; }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 20px;
+  }
+  .eyebrow::before { content: ''; display: block; width: 24px; height: 1px; background: var(--gold); }
+
+  h1 { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 5vw, 4.8rem); color: #f5f0e8; line-height: 1.1; margin-bottom: 20px; }
+  h1 em { font-style: italic; color: rgba(184,148,63,0.85); }
+
+  .hero-tagline {
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-size: 1.15rem; color: rgba(245,240,232,0.55);
+  }
+
+  /* MAIN LAYOUT */
+  .main {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 0; min-height: 600px;
+  }
+
+  /* LEFT — form */
+  .form-side {
+    padding: 80px 8vw 80px 10vw;
+    background: var(--cream);
+  }
+
+  .form-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 16px;
+  }
+  .form-eyebrow::before { content: ''; display: block; width: 16px; height: 1px; background: var(--gold); }
+
+  .form-side h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; color: var(--forest); margin-bottom: 8px;
+  }
+  .form-side h2 em { font-style: italic; }
+  .form-side .form-lead { font-size: 0.88rem; color: var(--muted); line-height: 1.7; margin-bottom: 36px; font-weight: 300; }
+
+  .form-group { margin-bottom: 20px; }
+  .form-group label {
+    display: block; font-size: 0.72rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 8px; font-weight: 600;
+  }
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%; padding: 14px 16px;
+    background: white; border: 1.5px solid rgba(45,74,45,0.15);
+    border-radius: 2px; font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem; color: var(--text); outline: none;
+    transition: border-color 0.2s; -webkit-appearance: none;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus { border-color: var(--forest); }
+  .form-group textarea { min-height: 110px; resize: vertical; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .btn-submit {
+    width: 100%; padding: 18px;
+    background: var(--forest); color: var(--cream);
+    border: none; border-radius: 2px; cursor: pointer;
+    font-family: 'Raleway', sans-serif; font-size: 0.85rem;
+    font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    transition: background 0.25s, transform 0.2s;
+    margin-top: 8px;
+  }
+  .btn-submit:hover { background: var(--forest-mid); transform: translateY(-2px); }
+
+  .form-note {
+    font-size: 0.75rem; color: var(--muted); margin-top: 12px;
+    line-height: 1.6; text-align: center;
+  }
+
+  /* success state */
+  .form-success {
+    display: none; text-align: center; padding: 48px 32px;
+    background: rgba(45,74,45,0.04); border: 1px solid rgba(45,74,45,0.12);
+    border-radius: 4px; margin-top: 20px;
+  }
+  .form-success h3 {
+    font-family: 'Playfair Display', serif; font-size: 1.4rem;
+    color: var(--forest); margin-bottom: 12px;
+  }
+  .form-success p { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
+
+  /* RIGHT — info */
+  .info-side {
+    padding: 80px 10vw 80px 8vw;
+    background: var(--forest);
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+
+  .info-top h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem; color: #f5f0e8; margin-bottom: 32px;
+  }
+
+  .contact-item {
+    display: flex; gap: 20px; align-items: flex-start;
+    margin-bottom: 28px; padding-bottom: 28px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .contact-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .contact-icon {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .contact-item-text h4 {
+    font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(245,240,232,0.35); margin-bottom: 6px;
+  }
+  .contact-item-text p {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem; color: #f5f0e8; line-height: 1.4;
+  }
+  .contact-item-text a {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem; color: var(--gold); text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .contact-item-text a:hover { opacity: 0.75; }
+  .contact-item-text span {
+    display: block; font-size: 0.78rem; color: rgba(245,240,232,0.35);
+    font-family: 'Raleway', sans-serif; margin-top: 4px; font-weight: 300;
+  }
+
+  /* quote bottom */
+  .info-quote {
+    margin-top: 48px; padding-top: 40px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .info-quote p {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; font-style: italic;
+    color: rgba(245,240,232,0.55); line-height: 1.75;
+  }
+  .info-quote cite {
+    display: block; margin-top: 16px;
+    font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(184,148,63,0.5); font-style: normal;
+    font-family: 'Raleway', sans-serif;
+  }
+
+  /* HOW TO GET */
+  .how-section {
+    padding: 80px 10vw;
+    background: var(--warm);
+    border-top: 1px solid rgba(45,74,45,0.08);
+  }
+
+  .how-section .section-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 16px;
+  }
+  .how-section .section-eyebrow::before { content: ''; display: block; width: 20px; height: 1px; background: var(--gold); }
+
+  .how-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 2.5vw, 2.4rem); color: var(--forest); margin-bottom: 48px;
+  }
+  .how-section h2 em { font-style: italic; }
+
+  .how-steps {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 32px;
+  }
+
+  .how-step {
+    position: relative; padding: 36px 28px;
+    background: white; border-radius: 4px;
+    border: 1px solid rgba(45,74,45,0.08);
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .how-step.visible { opacity: 1; transform: none; }
+
+  .how-step-num {
+    position: absolute; top: 24px; right: 24px;
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem; color: rgba(45,74,45,0.06); line-height: 1;
+  }
+
+  .how-step-icon {
+    width: 48px; height: 48px; margin-bottom: 20px;
+    background: rgba(45,74,45,0.06); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .how-step h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem; color: var(--forest); margin-bottom: 10px;
+  }
+  .how-step p { font-size: 0.85rem; color: var(--muted); line-height: 1.7; font-weight: 300; }
+
+  /* FOOTER */
+  footer {
+    background: #1a2a1a; color: rgba(245,240,232,0.5);
+    padding: 40px 10vw; text-align: center; font-size: 0.8rem; line-height: 1.8;
+  }
+  .footer-brand { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #f5f0e8; margin-bottom: 4px; }
+  .footer-tag { font-style: italic; color: rgba(184,148,63,0.6); margin-bottom: 12px; font-family: 'Playfair Display', serif; font-size: 0.95rem; }
+  footer a { color: rgba(184,148,63,0.7); text-decoration: none; }
+
+  @media (max-width: 900px) {
+    nav { padding: 16px 20px; }
+    .hero { padding: 100px 24px 56px; min-height: auto; }
+    .main { grid-template-columns: 1fr; }
+    .form-side { padding: 56px 24px; }
+    .info-side { padding: 56px 24px; }
+    .how-section { padding: 56px 24px; }
+    .how-steps { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+
+  /* ── NAV MENU ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 48px;
+    background: rgba(245,240,232,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(45,74,45,0.12);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; color: var(--forest);
+    text-decoration: none; z-index: 101;
+  }
+  .nav-links {
+    display: flex; gap: 28px; list-style: none;
+    align-items: center;
+  }
+  .nav-links a {
+    text-decoration: none; color: var(--muted);
+    font-size: 0.8rem; font-weight: 500; letter-spacing: 0.08em;
+    text-transform: uppercase; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--forest); }
+  .nav-cta {
+    background: var(--forest) !important; color: var(--cream) !important;
+    padding: 9px 20px; border-radius: 2px;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--forest-mid) !important; }
+  .nav-burger {
+    display: none; flex-direction: column; gap: 5px;
+    background: none; border: none; cursor: pointer;
+    padding: 4px; z-index: 101;
+  }
+  .nav-burger span {
+    display: block; width: 24px; height: 2px;
+    background: var(--forest); border-radius: 2px;
+    transition: all 0.3s;
+  }
+  .nav-burger.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+  .nav-burger.open span:nth-child(2) { opacity: 0; }
+  .nav-burger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+  @media (max-width: 800px) {
+    nav { padding: 16px 20px; }
+    .nav-burger { display: flex; }
+    .nav-links {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(245,240,232,0.98);
+      flex-direction: column; justify-content: center; align-items: center;
+      gap: 28px; display: none;
+    }
+    .nav-links.open { display: flex; }
+    .nav-links a { font-size: 1.1rem; }
+    .nav-cta { padding: 12px 32px !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Дом в лесу</a>
+  <button class="nav-burger" onclick="toggleMenu()" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="programma.html">Программа</a></li>
+    <li><a href="rasporyadok.html">Распорядок</a></li>
+    <li><a href="pravila.html">Правила</a></li>
+    <li><a href="o-nas.html">О нас</a></li>
+    <li><a href="novosti.html">Новости</a></li>
+    <li><a href="kontakty.html" class="nav-cta">Связаться</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <svg class="hero-art" viewBox="0 0 320 280" fill="none">
+    <path d="M60 280V160L30 210L60 160L90 210L60 160M60 160V90L28 140L60 90L92 140L60 90V45L38 72L60 45L82 72" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M170 280V150L135 205L170 150L205 205L170 150M170 150V80L130 132L170 80L210 132L170 80V35L148 62L170 35L192 62" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M270 280V165L248 205L270 165L292 205L270 165M270 165V100L248 132L270 100L292 132L270 100V58L254 80L270 58L286 80" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="0" y1="279" x2="320" y2="279" stroke="white" stroke-width="2"/>
+  </svg>
+  <div class="hero-inner">
+    <div class="eyebrow">Контакты</div>
+    <h1>Двери<br><em>открыты</em></h1>
+    <p class="hero-tagline">Мы рядом. Но путь — твой.</p>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- FORM -->
+  <div class="form-side">
+    <div class="form-eyebrow">Написать нам</div>
+    <h2>Задать вопрос<br>или <em>записаться</em></h2>
+    <p class="form-lead">Не обязательно знать что именно сказать. Напишите как есть — мы ответим в течение дня. Все обращения конфиденциальны.</p>
+
+    <div id="contactForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Ваше имя</label>
+          <input type="text" placeholder="Иван" id="name">
+        </div>
+        <div class="form-group">
+          <label>Телефон или Telegram</label>
+          <input type="text" placeholder="+7 (___) ___ __ __" id="phone">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Кому нужна помощь</label>
+        <select id="who">
+          <option value="">Выберите...</option>
+          <option>Мне самому</option>
+          <option>Моему близкому</option>
+          <option>Хочу узнать подробнее</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Сообщение</label>
+        <textarea placeholder="Расскажите коротко о ситуации — или просто напишите «хочу поговорить»..." id="message"></textarea>
+      </div>
+      <button class="btn-submit" onclick="submitForm()">Отправить</button>
+      <p class="form-note">Мы отвечаем в WhatsApp или Telegram. Никаких баз данных, никакой рекламы.</p>
+    </div>
+
+    <div class="form-success" id="formSuccess">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="margin:0 auto 16px;display:block;">
+        <circle cx="24" cy="24" r="22" stroke="#2d4a2d" stroke-width="1.5" opacity="0.3"/>
+        <path d="M14 24l8 8 12-16" stroke="#2d4a2d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <h3>Получили ваше сообщение</h3>
+      <p>Свяжемся с вами в течение дня.<br>Спасибо что написали — это уже первый шаг.</p>
+    </div>
+  </div>
+
+  <!-- INFO -->
+  <div class="info-side">
+    <div class="info-top">
+      <h2>Как с нами связаться</h2>
+
+      <div class="contact-item">
+        <div class="contact-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2C6.686 2 4 4.686 4 8c0 5 6 10 6 10s6-5 6-10c0-3.314-2.686-6-6-6z" stroke="rgba(245,240,232,0.6)" stroke-width="1.3"/>
+            <circle cx="10" cy="8" r="2" stroke="rgba(245,240,232,0.6)" stroke-width="1.3"/>
+          </svg>
+        </div>
+        <div class="contact-item-text">
+          <h4>Адрес</h4>
+          <p>Кокошкино, Московская область</p>
+          <span>Точный адрес сообщаем после звонка</span>
+        </div>
+      </div>
+
+      <div class="contact-item">
+        <div class="contact-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M3 5a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z" stroke="rgba(245,240,232,0.6)" stroke-width="1.3"/>
+            <path d="M3 7l7 5 7-5" stroke="rgba(245,240,232,0.6)" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="contact-item-text">
+          <h4>Telegram</h4>
+          <a href="https://t.me/domvlesu_help">@domvlesu_help</a>
+          <span>Отвечаем ежедневно</span>
+        </div>
+      </div>
+
+      <div class="contact-item">
+        <div class="contact-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M4 4c0 8.837 7.163 16 16 16" stroke="rgba(245,240,232,0.6)" stroke-width="1.3" stroke-linecap="round"/>
+            <path d="M3 4h4l2 4-2.5 1.5a10 10 0 004 4L12 11l4 2v4a1 1 0 01-1 1C6.716 18 2 13.284 2 5a1 1 0 011-1z" stroke="rgba(245,240,232,0.6)" stroke-width="1.3" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="contact-item-text">
+          <h4>Телефон / WhatsApp</h4>
+          <a href="tel:+7XXXXXXXXXX">+7 (___) ___ __ __</a>
+          <span>С 9:00 до 21:00</span>
+        </div>
+      </div>
+
+      <div class="contact-item">
+        <div class="contact-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="8" stroke="rgba(245,240,232,0.6)" stroke-width="1.3"/>
+            <path d="M10 6v4l3 2" stroke="rgba(245,240,232,0.6)" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="contact-item-text">
+          <h4>Время ответа</h4>
+          <p>В течение дня</p>
+          <span>Мы живые люди — иногда чуть дольше</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-quote">
+      <p>Не нужно знать что сказать. Просто напишите — мы разберёмся вместе. Первый шаг всегда самый трудный.</p>
+      <cite>Команда «Дом в лесу»</cite>
+    </div>
+  </div>
+</div>
+
+<!-- HOW TO GET -->
+<div class="how-section">
+  <div class="section-eyebrow">Как попасть к нам</div>
+  <h2>Три шага к<br><em>новому началу</em></h2>
+
+  <div class="how-steps">
+    <div class="how-step">
+      <div class="how-step-num">01</div>
+      <div class="how-step-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <rect x="3" y="4" width="16" height="15" rx="2" stroke="#2d4a2d" stroke-width="1.3"/>
+          <path d="M7 2v4M15 2v4M3 9h16" stroke="#2d4a2d" stroke-width="1.3" stroke-linecap="round"/>
+          <circle cx="7" cy="13" r="1" fill="#2d4a2d"/>
+          <circle cx="11" cy="13" r="1" fill="#2d4a2d"/>
+          <circle cx="15" cy="13" r="1" fill="#2d4a2d"/>
+        </svg>
+      </div>
+      <h3>14 дней без употребления</h3>
+      <p>Первое условие — прийти трезвым. Минимум 14 дней без любых веществ. Это ваша готовность — и наша уверенность что работа возможна.</p>
+    </div>
+
+    <div class="how-step">
+      <div class="how-step-num">02</div>
+      <div class="how-step-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <rect x="4" y="3" width="14" height="17" rx="2" stroke="#2d4a2d" stroke-width="1.3"/>
+          <path d="M7 8h8M7 11h8M7 14h5" stroke="#2d4a2d" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3>Медицинское обследование</h3>
+      <p>Базовый осмотр и справка об отсутствии противопоказаний. Это нужно для безопасности — вашей и всего дома.</p>
+    </div>
+
+    <div class="how-step">
+      <div class="how-step-num">03</div>
+      <div class="how-step-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <path d="M18 10c0 5-7 9-7 9S4 15 4 10a7 7 0 1114 0z" stroke="#2d4a2d" stroke-width="1.3"/>
+          <circle cx="11" cy="10" r="2.5" stroke="#2d4a2d" stroke-width="1.3"/>
+        </svg>
+      </div>
+      <h3>Позвонить и договориться</h3>
+      <p>Напишите или позвоните — расскажем об условиях, ответим на вопросы и договоримся о дате прихода.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Дом в лесу</div>
+  <div class="footer-tag">Мы рядом. Но путь — твой.</div>
+  <p>Бесплатная реабилитация · Кокошкино, Московская область<br>
+  <a href="index.html">← Вернуться на главную</a></p>
+</footer>
+
+<script>
+  function submitForm() {
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    if (!name || !phone) {
+      alert('Пожалуйста, укажите имя и телефон.');
+      return;
+    }
+    document.getElementById('contactForm').style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.how-step').forEach((el, i) => {
+    el.style.transitionDelay = (i * 0.1) + 's';
+    observer.observe(el);
+  });
+</script>
+
+
+<script>
+function toggleMenu() {
+  const links = document.getElementById('navLinks');
+  const burger = document.querySelector('.nav-burger');
+  links.classList.toggle('open');
+  burger.classList.toggle('open');
+}
+document.querySelectorAll('.nav-links a').forEach(a => {
+  a.addEventListener('click', () => {
+    document.getElementById('navLinks').classList.remove('open');
+    document.querySelector('.nav-burger').classList.remove('open');
+  });
+});
+</script>
+</body>
+</html>

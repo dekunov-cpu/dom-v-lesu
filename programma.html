@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Программа — Дом в лесу</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #2d4a2d;
+    --forest-mid: #3d6b3d;
+    --forest-light: #5a8f5a;
+    --gold: #b8943f;
+    --cream: #f5f0e8;
+    --warm: #e8ddc8;
+    --text: #1a2a1a;
+    --muted: #5a6a5a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Raleway', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 48px;
+    background: rgba(245,240,232,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(45,74,45,0.12);
+  }
+
+  /* HERO */
+  .hero {
+    padding: 140px 10vw 80px;
+    background: var(--cream);
+    position: relative; overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(to right, transparent, rgba(45,74,45,0.15), transparent);
+  }
+
+  .hero-inner {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+    max-width: 1100px;
+  }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 20px;
+  }
+  .eyebrow::before { content: ''; display: block; width: 24px; height: 1px; background: var(--gold); }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 5vw, 4.8rem);
+    color: var(--forest); line-height: 1.1; margin-bottom: 24px;
+  }
+  h1 em { font-style: italic; color: var(--forest-light); }
+
+  .hero-lead {
+    font-size: 1.05rem; font-weight: 300;
+    color: var(--muted); line-height: 1.85;
+  }
+
+  /* hero right — big quote */
+  .hero-quote {
+    padding: 48px;
+    background: var(--forest);
+    border-radius: 4px;
+    position: relative; overflow: hidden;
+  }
+  .hero-quote::before {
+    content: '';
+    position: absolute; top: -50px; right: -50px;
+    width: 180px; height: 180px; border-radius: 50%;
+    background: rgba(184,148,63,0.08); pointer-events: none;
+  }
+  .qmark {
+    font-family: 'Playfair Display', serif;
+    font-size: 6rem; line-height: 0.7;
+    color: rgba(255,255,255,0.06);
+    display: block; margin-bottom: 12px;
+  }
+  .hero-quote p {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem; font-style: italic;
+    color: rgba(245,240,232,0.85); line-height: 1.75;
+    position: relative; z-index: 1;
+  }
+  .hero-quote-note {
+    margin-top: 24px; padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(184,148,63,0.7);
+  }
+
+  /* DURATION BAND */
+  .duration-band {
+    background: var(--forest);
+    padding: 40px 10vw;
+    display: flex; align-items: center; justify-content: center; gap: 64px;
+  }
+  .dur-item { text-align: center; }
+  .dur-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.2rem; color: var(--cream); line-height: 1;
+  }
+  .dur-label {
+    font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(245,240,232,0.4); margin-top: 6px;
+  }
+  .dur-divider { width: 1px; height: 60px; background: rgba(255,255,255,0.1); }
+
+  /* ELEMENTS */
+  .elements { padding: 96px 10vw; }
+  .elements-header { margin-bottom: 64px; }
+  .elements-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.8rem); color: var(--forest);
+    margin-bottom: 16px;
+  }
+  .elements-header h2 em { font-style: italic; }
+  .elements-header p { font-size: 0.95rem; color: var(--muted); line-height: 1.8; max-width: 500px; font-weight: 300; }
+
+  .elements-list { display: flex; flex-direction: column; gap: 0; }
+
+  .element-item {
+    display: grid; grid-template-columns: 80px 1fr;
+    gap: 0 40px;
+    padding: 48px 0;
+    border-bottom: 1px solid rgba(45,74,45,0.08);
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .element-item:first-child { padding-top: 0; }
+  .element-item:last-child { border-bottom: none; }
+  .element-item.visible { opacity: 1; transform: none; }
+
+  .element-icon {
+    display: flex; flex-direction: column; align-items: center;
+    padding-top: 4px;
+  }
+  .element-icon-circle {
+    width: 52px; height: 52px; border-radius: 50%;
+    border: 1.5px solid rgba(45,74,45,0.2);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    background: white;
+  }
+  .element-icon-line {
+    flex: 1; width: 1px; background: rgba(45,74,45,0.08);
+    margin-top: 12px; min-height: 40px;
+  }
+  .element-item:last-child .element-icon-line { display: none; }
+
+  .element-body { padding-bottom: 0; }
+  .element-body h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem; color: var(--forest); margin-bottom: 12px; line-height: 1.2;
+  }
+  .element-body p {
+    font-size: 0.92rem; color: var(--muted); line-height: 1.85; font-weight: 300;
+    max-width: 580px;
+  }
+  .element-body .element-note {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 16px; font-size: 0.75rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--gold); font-weight: 600;
+  }
+  .element-body .element-note::before {
+    content: ''; display: block; width: 16px; height: 1px; background: var(--gold);
+  }
+
+  /* RESULT BAND */
+  .result-band {
+    background: var(--warm);
+    padding: 80px 10vw;
+    border-top: 1px solid rgba(45,74,45,0.08);
+    border-bottom: 1px solid rgba(45,74,45,0.08);
+  }
+  .result-inner {
+    max-width: 900px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+  }
+  .result-text .section-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 16px;
+  }
+  .result-text .section-eyebrow::before { content: ''; display: block; width: 20px; height: 1px; background: var(--gold); }
+  .result-text h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; color: var(--forest); margin-bottom: 20px;
+  }
+  .result-text h2 em { font-style: italic; }
+  .result-text p { font-size: 0.92rem; color: var(--muted); line-height: 1.85; font-weight: 300; margin-bottom: 16px; }
+
+  .result-items { display: flex; flex-direction: column; gap: 16px; }
+  .result-item {
+    display: flex; gap: 16px; align-items: flex-start;
+    padding: 20px; background: white;
+    border-radius: 4px; border: 1px solid rgba(45,74,45,0.08);
+  }
+  .result-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--forest-light); flex-shrink: 0; margin-top: 6px;
+  }
+  .result-item p { font-size: 0.88rem; color: var(--text); line-height: 1.6; }
+
+  /* SCHEDULE LINK */
+  .schedule-link-block {
+    padding: 80px 10vw; text-align: center;
+  }
+  .schedule-link-card {
+    max-width: 600px; margin: 0 auto;
+    padding: 56px; background: white;
+    border: 1px solid rgba(45,74,45,0.1); border-radius: 4px;
+  }
+  .schedule-link-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; color: var(--forest); margin-bottom: 12px;
+  }
+  .schedule-link-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; margin-bottom: 28px; }
+  .btn-outline {
+    display: inline-block;
+    background: transparent; color: var(--forest);
+    padding: 14px 36px; border: 1.5px solid var(--forest);
+    border-radius: 2px;
+    font-family: 'Raleway', sans-serif; font-size: 0.82rem;
+    font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    text-decoration: none; transition: all 0.25s; margin-right: 12px;
+  }
+  .btn-outline:hover { background: var(--forest); color: var(--cream); }
+  .btn-primary {
+    display: inline-block;
+    background: var(--forest); color: var(--cream);
+    padding: 14px 36px; border-radius: 2px;
+    font-family: 'Raleway', sans-serif; font-size: 0.82rem;
+    font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    text-decoration: none; transition: background 0.25s, transform 0.2s;
+  }
+  .btn-primary:hover { background: var(--forest-mid); transform: translateY(-2px); }
+
+  /* FOOTER */
+  footer {
+    background: #1a2a1a; color: rgba(245,240,232,0.5);
+    padding: 40px 10vw; text-align: center;
+    font-size: 0.8rem; line-height: 1.8;
+  }
+  .footer-brand { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #f5f0e8; margin-bottom: 4px; }
+  .footer-tag { font-style: italic; color: rgba(184,148,63,0.6); margin-bottom: 12px; font-family: 'Playfair Display', serif; font-size: 0.95rem; }
+  footer a { color: rgba(184,148,63,0.7); text-decoration: none; }
+
+  @media (max-width: 900px) {
+    nav { padding: 16px 20px; }
+    .hero { padding: 100px 24px 56px; }
+    .hero-inner { grid-template-columns: 1fr; gap: 36px; }
+    .duration-band { flex-wrap: wrap; gap: 32px; padding: 36px 24px; }
+    .dur-divider { display: none; }
+    .elements { padding: 56px 24px; }
+    .element-item { grid-template-columns: 52px 1fr; gap: 0 20px; }
+    .result-band { padding: 56px 24px; }
+    .result-inner { grid-template-columns: 1fr; gap: 40px; }
+    .schedule-link-block { padding: 56px 24px; }
+    .schedule-link-card { padding: 36px 24px; }
+    .btn-outline, .btn-primary { display: block; margin: 0 0 12px; text-align: center; }
+  }
+
+  /* ── NAV MENU ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 48px;
+    background: rgba(245,240,232,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(45,74,45,0.12);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; color: var(--forest);
+    text-decoration: none; z-index: 101;
+  }
+  .nav-links {
+    display: flex; gap: 28px; list-style: none;
+    align-items: center;
+  }
+  .nav-links a {
+    text-decoration: none; color: var(--muted);
+    font-size: 0.8rem; font-weight: 500; letter-spacing: 0.08em;
+    text-transform: uppercase; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--forest); }
+  .nav-cta {
+    background: var(--forest) !important; color: var(--cream) !important;
+    padding: 9px 20px; border-radius: 2px;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--forest-mid) !important; }
+  .nav-burger {
+    display: none; flex-direction: column; gap: 5px;
+    background: none; border: none; cursor: pointer;
+    padding: 4px; z-index: 101;
+  }
+  .nav-burger span {
+    display: block; width: 24px; height: 2px;
+    background: var(--forest); border-radius: 2px;
+    transition: all 0.3s;
+  }
+  .nav-burger.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+  .nav-burger.open span:nth-child(2) { opacity: 0; }
+  .nav-burger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+  @media (max-width: 800px) {
+    nav { padding: 16px 20px; }
+    .nav-burger { display: flex; }
+    .nav-links {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(245,240,232,0.98);
+      flex-direction: column; justify-content: center; align-items: center;
+      gap: 28px; display: none;
+    }
+    .nav-links.open { display: flex; }
+    .nav-links a { font-size: 1.1rem; }
+    .nav-cta { padding: 12px 32px !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Дом в лесу</a>
+  <button class="nav-burger" onclick="toggleMenu()" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="programma.html">Программа</a></li>
+    <li><a href="rasporyadok.html">Распорядок</a></li>
+    <li><a href="pravila.html">Правила</a></li>
+    <li><a href="o-nas.html">О нас</a></li>
+    <li><a href="novosti.html">Новости</a></li>
+    <li><a href="kontakty.html" class="nav-cta">Связаться</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow">Программа</div>
+      <h1>Возвращение<br>к <em>себе</em></h1>
+      <p class="hero-lead">Мы не лечим. Мы создаём условия при которых человек сам начинает видеть — что потерял, что хочет вернуть и как это сделать. Через простые ежедневные действия возвращаются забытые привычки нормальной жизни.</p>
+    </div>
+    <div class="hero-quote">
+      <span class="qmark">"</span>
+      <p>Комфорт — не цель. Трезвость — цель. Каждый день здесь — это работа. Внутренняя и физическая.</p>
+      <div class="hero-quote-note">Дом в лесу · принцип программы</div>
+    </div>
+  </div>
+</div>
+
+<!-- DURATION -->
+<div class="duration-band">
+  <div class="dur-item">
+    <div class="dur-num">28</div>
+    <div class="dur-label">дней программы</div>
+  </div>
+  <div class="dur-divider"></div>
+  <div class="dur-item">
+    <div class="dur-num">0 ₽</div>
+    <div class="dur-label">стоимость</div>
+  </div>
+  <div class="dur-divider"></div>
+  <div class="dur-item">
+    <div class="dur-num">6</div>
+    <div class="dur-label">человек в команде</div>
+  </div>
+  <div class="dur-divider"></div>
+  <div class="dur-item">
+    <div class="dur-num">59</div>
+    <div class="dur-label">лет трезвости на всех</div>
+  </div>
+</div>
+
+<!-- ELEMENTS -->
+<div class="elements">
+  <div class="elements-header">
+    <div style="display:inline-flex;align-items:center;gap:10px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;">
+      <span style="display:block;width:20px;height:1px;background:var(--gold)"></span>
+      Из чего состоит программа
+    </div>
+    <h2>Простые вещи —<br><em>глубокая работа</em></h2>
+    <p>Никаких сложных методик. Только то, что работает — проверено людьми которые сами через это прошли.</p>
+  </div>
+
+  <div class="elements-list">
+
+    <div class="element-item">
+      <div class="element-icon">
+        <div class="element-icon-circle">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M4 4h14v14H4z" stroke="#2d4a2d" stroke-width="1.3" rx="1"/>
+            <path d="M7 8h8M7 11h8M7 14h5" stroke="#2d4a2d" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="element-icon-line"></div>
+      </div>
+      <div class="element-body">
+        <h3>Письменные задания</h3>
+        <p>Человек смотрит на свою жизнь честно — что было до, что происходит сейчас, что он потерял из-за употребления. Никто не проверяет стиль или грамотность. Важно писать правду. Часто именно на бумаге человек впервые говорит себе то, что давно знал.</p>
+        <span class="element-note">Ежедневно</span>
+      </div>
+    </div>
+
+    <div class="element-item">
+      <div class="element-icon">
+        <div class="element-icon-circle">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <circle cx="11" cy="11" r="8" stroke="#2d4a2d" stroke-width="1.3"/>
+            <path d="M11 7v4l3 2" stroke="#2d4a2d" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="element-icon-line"></div>
+      </div>
+      <div class="element-body">
+        <h3>Дневник чувств</h3>
+        <p>Каждый вечер — письменно. Что почувствовал сегодня. Злость, страх, радость, обиду, благодарность. Зависимые люди часто не умеют называть чувства — подавляли их годами. Это навык, который возвращается. Медленно, но возвращается.</p>
+        <span class="element-note">Каждый вечер</span>
+      </div>
+    </div>
+
+    <div class="element-item">
+      <div class="element-icon">
+        <div class="element-icon-circle">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M11 3C6.477 3 3 6.477 3 11s3.477 8 8 8 8-3.477 8-8" stroke="#2d4a2d" stroke-width="1.3" stroke-linecap="round"/>
+            <path d="M15 3l4 4-4 4" stroke="#2d4a2d" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="element-icon-line"></div>
+      </div>
+      <div class="element-body">
+        <h3>План выздоровления</h3>
+        <p>Не абстрактный — конкретный. Где жить после выхода. С кем общаться. Что делать когда станет тяжело и захочется употребить. Человек уходит не в пустоту — а с картой на руках. Это один из самых важных документов который он напишет здесь.</p>
+        <span class="element-note">К концу программы</span>
+      </div>
+    </div>
+
+    <div class="element-item">
+      <div class="element-icon">
+        <div class="element-icon-circle">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <circle cx="9" cy="7" r="3" stroke="#2d4a2d" stroke-width="1.3"/>
+            <circle cx="15" cy="10" r="2.5" stroke="#2d4a2d" stroke-width="1.3"/>
+            <path d="M3 18c0-3 2.686-5 6-5" stroke="#2d4a2d" stroke-width="1.3" stroke-linecap="round"/>
+            <path d="M13 18c0-2 1.343-3.5 3-3.5s3 1.5 3 3.5" stroke="#2d4a2d" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="element-icon-line"></div>
+      </div>
+      <div class="element-body">
+        <h3>Наставник в социуме</h3>
+        <p>Помогаем найти живого человека снаружи — в АА, НА или другом сообществе. Чтобы после выхода был кто-то рядом. Не потому что мы не доверяем — а потому что жизнь продолжается после 28 дней. И в ней нужна поддержка.</p>
+        <span class="element-note">До выхода из дома</span>
+      </div>
+    </div>
+
+    <div class="element-item">
+      <div class="element-icon">
+        <div class="element-icon-circle">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M11 4v3M11 15v3M4 11h3M15 11h3" stroke="#2d4a2d" stroke-width="1.3" stroke-linecap="round"/>
+            <circle cx="11" cy="11" r="4" stroke="#2d4a2d" stroke-width="1.3"/>
+          </svg>
+        </div>
+        <div class="element-icon-line"></div>
+      </div>
+      <div class="element-body">
+        <h3>Лёгкая физическая активность</h3>
+        <p>Зарядка утром, прогулки, спортзал. Ничего жёсткого. Тело начинает работать — голова следует за ним. После употребления организм в плохом состоянии. Движение — самый простой и честный способ начать его возвращать.</p>
+        <span class="element-note">Ежедневно</span>
+      </div>
+    </div>
+
+    <div class="element-item">
+      <div class="element-icon">
+        <div class="element-icon-circle">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect x="3" y="4" width="16" height="15" rx="2" stroke="#2d4a2d" stroke-width="1.3"/>
+            <path d="M7 2v4M15 2v4M3 9h16" stroke="#2d4a2d" stroke-width="1.3" stroke-linecap="round"/>
+            <circle cx="8" cy="13" r="1" fill="#2d4a2d"/>
+            <circle cx="11" cy="13" r="1" fill="#2d4a2d"/>
+            <circle cx="14" cy="13" r="1" fill="#2d4a2d"/>
+          </svg>
+        </div>
+        <div class="element-icon-line"></div>
+      </div>
+      <div class="element-body">
+        <h3>Режим дня и ночи</h3>
+        <p>Подъём, еда, сон — в одно и то же время каждый день. Это звучит просто. На практике — один из самых мощных инструментов восстановления. Зависимость разрушает ритм жизни полностью. Режим его возвращает — тихо и без лишних слов.</p>
+        <span class="element-note">Весь период</span>
+      </div>
+    </div>
+
+    <div class="element-item">
+      <div class="element-icon">
+        <div class="element-icon-circle">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M6 10c0-2.761 2.239-5 5-5s5 2.239 5 5v2H6v-2z" stroke="#2d4a2d" stroke-width="1.3"/>
+            <path d="M4 12h14v2a4 4 0 01-4 4H8a4 4 0 01-4-4v-2z" stroke="#2d4a2d" stroke-width="1.3"/>
+          </svg>
+        </div>
+        <div class="element-icon-line"></div>
+      </div>
+      <div class="element-body">
+        <h3>Правильное питание</h3>
+        <p>Готовят сами, по дежурству. Завтрак, обед, ужин — каждый день. Еда — это забота о себе. Многие разучились это делать за годы употребления. Готовка вместе — это ещё и общение, и ответственность, и маленькая победа каждый день.</p>
+        <span class="element-note">Три раза в день</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- RESULT -->
+<div class="result-band">
+  <div class="result-inner">
+    <div class="result-text">
+      <div class="section-eyebrow">Что происходит</div>
+      <h2>Новые привычки<br>или <em>забытые старые</em></h2>
+      <p>28 дней — это не срок лечения. Это время чтобы тело и голова начали работать по-другому. Чтобы появился ритм, появилось ощущение что жизнь возможна без веществ.</p>
+      <p>Человек уходит не вылеченным — но с инструментами. И с опытом того, каково это — жить трезво.</p>
+    </div>
+    <div class="result-items">
+      <div class="result-item">
+        <div class="result-dot"></div>
+        <p>Умение называть свои чувства и говорить о них</p>
+      </div>
+      <div class="result-item">
+        <div class="result-dot"></div>
+        <p>Восстановленный режим сна и питания</p>
+      </div>
+      <div class="result-item">
+        <div class="result-dot"></div>
+        <p>Конкретный план на жизнь после выхода</p>
+      </div>
+      <div class="result-item">
+        <div class="result-dot"></div>
+        <p>Наставник в сообществе трезвых людей</p>
+      </div>
+      <div class="result-item">
+        <div class="result-dot"></div>
+        <p>28 дней опыта — как это жить без веществ</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCHEDULE LINK -->
+<div class="schedule-link-block">
+  <div class="schedule-link-card">
+    <h3>Как выглядит каждый день</h3>
+    <p>Подъём, зарядка, задания, группы, спортзал, чаепитие, медитация. Посмотрите полный распорядок — с утра до отбоя, на каждый день недели.</p>
+    <a href="rasporyadok.html" class="btn-outline">Распорядок дня</a>
+    <a href="index.html#contact" class="btn-primary">Записаться</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Дом в лесу</div>
+  <div class="footer-tag">Мы рядом. Но путь — твой.</div>
+  <p>Бесплатная реабилитация · Кокошкино, Московская область<br>
+  <a href="index.html">← Вернуться на главную</a></p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.element-item').forEach((el, i) => {
+    el.style.transitionDelay = (i * 0.07) + 's';
+    observer.observe(el);
+  });
+</script>
+
+
+<script>
+function toggleMenu() {
+  const links = document.getElementById('navLinks');
+  const burger = document.querySelector('.nav-burger');
+  links.classList.toggle('open');
+  burger.classList.toggle('open');
+}
+document.querySelectorAll('.nav-links a').forEach(a => {
+  a.addEventListener('click', () => {
+    document.getElementById('navLinks').classList.remove('open');
+    document.querySelector('.nav-burger').classList.remove('open');
+  });
+});
+</script>
+</body>
+</html>

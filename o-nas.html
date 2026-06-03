@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>О нас — Дом в лесу</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #2d4a2d;
+    --forest-mid: #3d6b3d;
+    --forest-light: #5a8f5a;
+    --gold: #b8943f;
+    --cream: #f5f0e8;
+    --warm: #e8ddc8;
+    --text: #1a2a1a;
+    --muted: #5a6a5a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Raleway', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 48px;
+    background: rgba(245,240,232,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(45,74,45,0.12);
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 70vh;
+    display: flex; align-items: flex-end;
+    padding: 130px 10vw 72px;
+    background: linear-gradient(160deg, #0f1e0f 0%, #1e3a1e 50%, #2d4a2d 100%);
+    position: relative; overflow: hidden;
+  }
+
+  /* animated forest background */
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 60%, rgba(184,148,63,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 30%, rgba(90,143,90,0.06) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .hero-trees-left {
+    position: absolute; bottom: 0; left: 0;
+    width: 260px; height: 300px; opacity: 0.06; pointer-events: none;
+  }
+  .hero-trees-right {
+    position: absolute; bottom: 0; right: 0;
+    width: 300px; height: 320px; opacity: 0.06; pointer-events: none;
+  }
+
+  .hero-inner { position: relative; z-index: 1; max-width: 720px; }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 20px;
+  }
+  .eyebrow::before { content: ''; display: block; width: 24px; height: 1px; background: var(--gold); }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 5.5vw, 5rem);
+    color: #f5f0e8; line-height: 1.1; margin-bottom: 24px;
+  }
+  h1 em { font-style: italic; color: rgba(184,148,63,0.85); }
+
+  .hero-lead {
+    font-size: 1.1rem; font-weight: 300;
+    color: rgba(245,240,232,0.65); line-height: 1.85;
+    max-width: 560px;
+  }
+
+  /* STORY */
+  .story {
+    padding: 96px 10vw;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+    max-width: 1200px; margin: 0 auto;
+  }
+
+  .story-text .section-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 16px;
+  }
+  .story-text .section-eyebrow::before { content: ''; display: block; width: 20px; height: 1px; background: var(--gold); }
+
+  .story-text h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    color: var(--forest); line-height: 1.2; margin-bottom: 28px;
+  }
+  .story-text h2 em { font-style: italic; }
+
+  .story-text p {
+    font-size: 0.95rem; color: var(--muted);
+    line-height: 1.9; font-weight: 300; margin-bottom: 20px;
+  }
+  .story-text p:last-child { margin-bottom: 0; }
+
+  /* anonymous card */
+  .anon-card {
+    background: var(--forest);
+    border-radius: 4px; padding: 48px 40px;
+    position: relative; overflow: hidden;
+  }
+  .anon-card::before {
+    content: '';
+    position: absolute; top: -60px; right: -60px;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: rgba(184,148,63,0.08); pointer-events: none;
+  }
+  .anon-card::after {
+    content: '';
+    position: absolute; bottom: -40px; left: -40px;
+    width: 150px; height: 150px; border-radius: 50%;
+    background: rgba(90,143,90,0.06); pointer-events: none;
+  }
+
+  .anon-quote {
+    position: relative; z-index: 1;
+  }
+
+  .quote-mark {
+    font-family: 'Playfair Display', serif;
+    font-size: 7rem; line-height: 0.7;
+    color: rgba(255,255,255,0.07);
+    pointer-events: none; margin-bottom: 8px;
+    display: block;
+  }
+
+  .anon-card p {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem; font-style: italic;
+    color: rgba(245,240,232,0.85); line-height: 1.75;
+    position: relative; z-index: 1;
+  }
+
+  .anon-card .anon-note {
+    display: flex; align-items: center; gap: 12px;
+    margin-top: 28px; padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .anon-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--gold); flex-shrink: 0;
+  }
+  .anon-card .anon-note span {
+    font-size: 0.75rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: rgba(245,240,232,0.35);
+    font-style: normal;
+    font-family: 'Raleway', sans-serif;
+  }
+
+  /* STATS ROW */
+  .stats-row {
+    background: var(--warm);
+    padding: 56px 10vw;
+    border-top: 1px solid rgba(45,74,45,0.08);
+    border-bottom: 1px solid rgba(45,74,45,0.08);
+  }
+  .stats-inner {
+    max-width: 900px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 0;
+  }
+  .stat-item {
+    text-align: center; padding: 0 20px;
+    border-right: 1px solid rgba(45,74,45,0.1);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem; color: var(--forest); line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin-top: 8px;
+  }
+
+  /* TEAM */
+  .team-section {
+    padding: 96px 10vw;
+    max-width: 1200px; margin: 0 auto;
+  }
+
+  .team-header { margin-bottom: 56px; }
+  .team-header .section-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 16px;
+  }
+  .team-header .section-eyebrow::before { content: ''; display: block; width: 20px; height: 1px; background: var(--gold); }
+  .team-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.8rem); color: var(--forest); margin-bottom: 16px;
+  }
+  .team-header h2 em { font-style: italic; }
+  .team-header p { font-size: 0.95rem; color: var(--muted); line-height: 1.8; max-width: 520px; font-weight: 300; }
+
+  .team-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .member-card {
+    padding: 36px 32px;
+    border: 1px solid rgba(45,74,45,0.1);
+    border-radius: 4px;
+    background: white;
+    position: relative; overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s;
+  }
+  .member-card.visible { opacity: 1; transform: translateY(0); }
+  .member-card:hover { box-shadow: 0 16px 40px rgba(45,74,45,0.1); transform: translateY(-4px) !important; }
+
+  /* leader card accent */
+  .member-card.leader {
+    background: var(--forest); grid-column: span 1;
+    border-color: var(--forest);
+  }
+  .member-card.leader .member-name { color: #f5f0e8; }
+  .member-card.leader .member-role { color: rgba(245,240,232,0.5); }
+  .member-card.leader .member-years { color: var(--gold); }
+  .member-card.leader .member-bio { color: rgba(245,240,232,0.65); }
+  .member-card.leader .years-bar-fill { background: var(--gold); }
+  .member-card.leader .years-bar-bg { background: rgba(255,255,255,0.1); }
+
+  /* psychologist card */
+  .member-card.psychologist {
+    background: rgba(45,74,45,0.04);
+    border-color: rgba(45,74,45,0.15);
+    grid-column: span 1;
+  }
+
+  .member-top {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; margin-bottom: 20px;
+  }
+
+  .member-initials {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: rgba(45,74,45,0.1);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem; color: var(--forest); font-weight: 700;
+    flex-shrink: 0;
+  }
+  .leader .member-initials {
+    background: rgba(255,255,255,0.12); color: #f5f0e8;
+  }
+  .psychologist .member-initials {
+    background: rgba(184,148,63,0.12); color: var(--gold);
+  }
+
+  .member-years {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; color: var(--forest); line-height: 1;
+    text-align: right;
+  }
+  .member-years span {
+    display: block; font-size: 0.65rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted);
+    font-family: 'Raleway', sans-serif; margin-top: 2px;
+  }
+
+  .member-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; color: var(--forest); margin-bottom: 4px;
+  }
+  .member-role {
+    font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 16px;
+  }
+
+  .years-bar-bg {
+    height: 3px; background: rgba(45,74,45,0.1);
+    border-radius: 2px; margin-bottom: 16px; overflow: hidden;
+  }
+  .years-bar-fill {
+    height: 100%; background: var(--forest-light);
+    border-radius: 2px; width: 0;
+    transition: width 1.2s ease;
+  }
+
+  .member-bio {
+    font-size: 0.83rem; color: var(--muted); line-height: 1.7; font-weight: 300;
+  }
+
+  /* MISSION */
+  .mission {
+    background: var(--warm);
+    padding: 96px 10vw;
+    border-top: 1px solid rgba(45,74,45,0.08);
+  }
+  .mission-inner {
+    max-width: 800px; margin: 0 auto; text-align: center;
+  }
+  .mission h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.8rem); color: var(--forest); margin-bottom: 24px;
+  }
+  .mission h2 em { font-style: italic; }
+  .mission p {
+    font-size: 1rem; color: var(--muted); line-height: 1.9;
+    font-weight: 300; margin-bottom: 16px;
+  }
+  .mission-tagline {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem; font-style: italic;
+    color: var(--gold); margin-top: 32px;
+  }
+
+  /* CTA */
+  .cta-block {
+    text-align: center; padding: 80px 10vw;
+  }
+  .cta-block h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; color: var(--forest); margin-bottom: 12px;
+  }
+  .cta-block h2 em { font-style: italic; }
+  .cta-block p { font-size: 0.95rem; color: var(--muted); margin-bottom: 32px; line-height: 1.7; }
+  .btn-primary {
+    display: inline-block;
+    background: var(--forest); color: var(--cream);
+    padding: 16px 40px; border-radius: 2px;
+    font-family: 'Raleway', sans-serif; font-size: 0.85rem;
+    font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    text-decoration: none; transition: background 0.25s, transform 0.2s;
+  }
+  .btn-primary:hover { background: var(--forest-mid); transform: translateY(-2px); }
+
+  /* FOOTER */
+  footer {
+    background: #1a2a1a; color: rgba(245,240,232,0.5);
+    padding: 40px 10vw; text-align: center;
+    font-size: 0.8rem; line-height: 1.8;
+  }
+  .footer-brand { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #f5f0e8; margin-bottom: 4px; }
+  .footer-tag { font-style: italic; color: rgba(184,148,63,0.6); margin-bottom: 12px; font-family: 'Playfair Display', serif; font-size: 0.95rem; }
+  footer a { color: rgba(184,148,63,0.7); text-decoration: none; }
+
+  @media (max-width: 900px) {
+    nav { padding: 16px 20px; }
+    .hero { padding: 100px 24px 56px; min-height: auto; }
+    .story { grid-template-columns: 1fr; gap: 40px; padding: 56px 24px; }
+    .stats-inner { grid-template-columns: repeat(2,1fr); gap: 24px; }
+    .stat-item { border-right: none; border-bottom: 1px solid rgba(45,74,45,0.1); padding: 0 0 24px; }
+    .stat-item:nth-child(2n) { border-right: none; }
+    .team-section { padding: 56px 24px; }
+    .team-grid { grid-template-columns: 1fr; }
+    .mission { padding: 56px 24px; }
+    .cta-block { padding: 56px 24px; }
+  }
+
+  /* ── NAV MENU ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 48px;
+    background: rgba(245,240,232,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(45,74,45,0.12);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; color: var(--forest);
+    text-decoration: none; z-index: 101;
+  }
+  .nav-links {
+    display: flex; gap: 28px; list-style: none;
+    align-items: center;
+  }
+  .nav-links a {
+    text-decoration: none; color: var(--muted);
+    font-size: 0.8rem; font-weight: 500; letter-spacing: 0.08em;
+    text-transform: uppercase; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--forest); }
+  .nav-cta {
+    background: var(--forest) !important; color: var(--cream) !important;
+    padding: 9px 20px; border-radius: 2px;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--forest-mid) !important; }
+  .nav-burger {
+    display: none; flex-direction: column; gap: 5px;
+    background: none; border: none; cursor: pointer;
+    padding: 4px; z-index: 101;
+  }
+  .nav-burger span {
+    display: block; width: 24px; height: 2px;
+    background: var(--forest); border-radius: 2px;
+    transition: all 0.3s;
+  }
+  .nav-burger.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+  .nav-burger.open span:nth-child(2) { opacity: 0; }
+  .nav-burger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+  @media (max-width: 800px) {
+    nav { padding: 16px 20px; }
+    .nav-burger { display: flex; }
+    .nav-links {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(245,240,232,0.98);
+      flex-direction: column; justify-content: center; align-items: center;
+      gap: 28px; display: none;
+    }
+    .nav-links.open { display: flex; }
+    .nav-links a { font-size: 1.1rem; }
+    .nav-cta { padding: 12px 32px !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Дом в лесу</a>
+  <button class="nav-burger" onclick="toggleMenu()" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="programma.html">Программа</a></li>
+    <li><a href="rasporyadok.html">Распорядок</a></li>
+    <li><a href="pravila.html">Правила</a></li>
+    <li><a href="o-nas.html">О нас</a></li>
+    <li><a href="novosti.html">Новости</a></li>
+    <li><a href="kontakty.html" class="nav-cta">Связаться</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+
+  <svg class="hero-trees-left" viewBox="0 0 260 300" fill="none">
+    <path d="M50 300V180L20 230L50 180L80 230L50 180M50 180V110L15 160L50 110L85 160L50 110V55L25 90L50 55L75 90" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M160 300V170L125 225L160 170L195 225L160 170M160 170V95L120 148L160 95L200 148L160 95V42L135 78L160 42L185 78" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="0" y1="299" x2="260" y2="299" stroke="white" stroke-width="2"/>
+  </svg>
+
+  <svg class="hero-trees-right" viewBox="0 0 300 320" fill="none">
+    <path d="M60 320V195L28 248L60 195L92 248L60 195M60 195V118L22 172L60 118L98 172L60 118V60L35 98L60 60L85 98" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M180 320V185L145 242L180 185L215 242L180 185M180 185V105L142 160L180 105L218 160L180 105V48L155 85L180 48L205 85" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M270 320V210L250 250L270 210L290 250L270 210V165L248 195L270 165L292 195" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="0" y1="319" x2="300" y2="319" stroke="white" stroke-width="2"/>
+  </svg>
+
+  <div class="hero-inner">
+    <div class="eyebrow">О нас</div>
+    <h1>Люди,<br>которые <em>прошли</em><br>через это</h1>
+    <p class="hero-lead">Здесь нет теории. Только живой опыт — и желание помочь тем, кто ещё на пути.</p>
+  </div>
+</div>
+
+<!-- STORY -->
+<div class="story">
+  <div class="story-text">
+    <div class="section-eyebrow">История</div>
+    <h2>Мечта,<br>которая стала <em>домом</em></h2>
+    <p>Есть люди, у которых мечта живёт годами — тихо, но не исчезает. Один человек давно хотел создать место, где зависимый мог бы получить настоящую помощь. Не формальную, не платную — живую.</p>
+    <p>Пришло время воплотить это в реальность. Был найден дом в лесу, подальше от городского шума. Созданы условия. Собрана команда. Этот человек покупает еду, платит зарплату, содержит дом — и делает это не ради признания.</p>
+    <p>Его имени здесь нет. Он так решил.</p>
+    <p><strong style="color:var(--forest)">Помощь — бесплатная. Полностью. Без исключений.</strong></p>
+  </div>
+
+  <div class="anon-card">
+    <div class="anon-quote">
+      <span class="quote-mark">"</span>
+      <p>Нам не нужны лавры или аплодисменты. Нужно чтобы люди выходили отсюда трезвыми — и оставались такими.</p>
+      <div class="anon-note">
+        <div class="anon-dot"></div>
+        <span>Основатель · анонимно</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-num">6</div>
+      <div class="stat-label">человек в команде</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">59</div>
+      <div class="stat-label">лет трезвости на всех</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">15</div>
+      <div class="stat-label">лет опыта психолога</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">0 ₽</div>
+      <div class="stat-label">стоимость для участника</div>
+    </div>
+  </div>
+</div>
+
+<!-- TEAM -->
+<div class="team-section">
+  <div class="team-header">
+    <div class="section-eyebrow">Команда</div>
+    <h2>Никто из нас не читал<br>об этом в <em>книгах</em></h2>
+    <p>Мы прожили это сами. И именно поэтому знаем — выход есть. Каждый из нас живёт в трезвости и каждый день делает выбор продолжать.</p>
+  </div>
+
+  <div class="team-grid">
+
+    <!-- Дмитрий — лидер -->
+    <div class="member-card leader">
+      <div class="member-top">
+        <div class="member-initials">Д</div>
+        <div class="member-years">10<span>лет трезвости</span></div>
+      </div>
+      <div class="member-name">Дмитрий</div>
+      <div class="member-role">Руководитель программы</div>
+      <div class="years-bar-bg"><div class="years-bar-fill" data-width="40"></div></div>
+      <div class="member-bio">Выстраивает программу изнутри. Знает каждый её шаг — потому что прошёл его сам. 15 лет назад сделал выбор. С тех пор не отступал.</div>
+    </div>
+
+    <!-- Артур -->
+    <div class="member-card">
+      <div class="member-top">
+        <div class="member-initials">А</div>
+        <div class="member-years">10<span>лет трезвости</span></div>
+      </div>
+      <div class="member-name">Артур</div>
+      <div class="member-role">Наставник</div>
+      <div class="years-bar-bg"><div class="years-bar-fill" data-width="40"></div></div>
+      <div class="member-bio">Четверть века в трезвости. Видел многое. Говорит просто и без прикрас — именно так, как это нужно слышать.</div>
+    </div>
+
+    <!-- Василий -->
+    <div class="member-card">
+      <div class="member-top">
+        <div class="member-initials">В</div>
+        <div class="member-years">18<span>лет трезвости</span></div>
+      </div>
+      <div class="member-name">Василий</div>
+      <div class="member-role">Наставник</div>
+      <div class="years-bar-bg"><div class="years-bar-fill" data-width="72"></div></div>
+      <div class="member-bio">Спокойный и надёжный. Рядом с ним не страшно говорить правду. Знает — осуждение не помогает. Честность — помогает.</div>
+    </div>
+
+    <!-- Станислав -->
+    <div class="member-card">
+      <div class="member-top">
+        <div class="member-initials">С</div>
+        <div class="member-years">16<span>лет трезвости</span></div>
+      </div>
+      <div class="member-name">Станислав</div>
+      <div class="member-role">Наставник</div>
+      <div class="years-bar-bg"><div class="years-bar-fill" data-width="64"></div></div>
+      <div class="member-bio">Прошёл путь, который знаком многим здесь. Помогает не словами — присутствием. Просто рядом, когда тяжело.</div>
+    </div>
+
+    <!-- Николай -->
+    <div class="member-card">
+      <div class="member-top">
+        <div class="member-initials">Н</div>
+        <div class="member-years">5<span>лет трезвости</span></div>
+      </div>
+      <div class="member-name">Николай</div>
+      <div class="member-role">Наставник</div>
+      <div class="years-bar-bg"><div class="years-bar-fill" data-width="20"></div></div>
+      <div class="member-bio">Помнит как это — первые дни, первые недели, первый год. Именно поэтому особенно ценен для тех, кто только начинает.</div>
+    </div>
+
+    <!-- Юлия -->
+    <div class="member-card psychologist">
+      <div class="member-top">
+        <div class="member-initials" style="background:rgba(184,148,63,0.12);color:var(--gold)">Ю</div>
+        <div class="member-years" style="color:var(--gold)">15<span>лет опыта</span></div>
+      </div>
+      <div class="member-name">Юлия</div>
+      <div class="member-role">Психолог</div>
+      <div class="years-bar-bg"><div class="years-bar-fill" data-width="60" style="background:var(--gold);opacity:0.6"></div></div>
+      <div class="member-bio">15 лет работы с людьми в зависимости. Ведёт арт-терапию и индивидуальные беседы. Создаёт пространство где можно говорить о том, о чём раньше не говорилось.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MISSION -->
+<div class="mission">
+  <div class="mission-inner">
+    <div style="display:inline-flex;align-items:center;gap:10px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;">
+      <span style="display:block;width:20px;height:1px;background:var(--gold)"></span>
+      Наша цель
+      <span style="display:block;width:20px;height:1px;background:var(--gold)"></span>
+    </div>
+    <h2>Помочь — а не оказать<br><em>медвежью услугу</em></h2>
+    <p>Мы не лечим. Мы создаём условия при которых человек сам находит в себе силы изменить жизнь. Рядом — люди которые прошли этот путь и остались на нём.</p>
+    <p>Комфорт не цель. Трезвость — цель. Каждый день в доме — это работа. Внутренняя и физическая.</p>
+    <div class="mission-tagline">Мы рядом. Но путь — твой.</div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-block">
+  <h2>Готов сделать<br><em>первый шаг?</em></h2>
+  <p>Двери открыты. Помощь бесплатная.<br>Нужно только решиться.</p>
+  <a href="index.html#contact" class="btn-primary">Связаться с нами</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Дом в лесу</div>
+  <div class="footer-tag">Мы рядом. Но путь — твой.</div>
+  <p>Бесплатная реабилитация · Кокошкино, Московская область<br>
+  <a href="index.html">← Вернуться на главную</a></p>
+</footer>
+
+<script>
+  // Reveal cards
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        // animate progress bars
+        entry.target.querySelectorAll('.years-bar-fill').forEach(bar => {
+          const w = bar.dataset.width;
+          setTimeout(() => { bar.style.width = w + '%'; }, 200);
+        });
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.member-card').forEach((el, i) => {
+    el.style.transitionDelay = (i * 0.08) + 's';
+    observer.observe(el);
+  });
+</script>
+
+
+<script>
+function toggleMenu() {
+  const links = document.getElementById('navLinks');
+  const burger = document.querySelector('.nav-burger');
+  links.classList.toggle('open');
+  burger.classList.toggle('open');
+}
+document.querySelectorAll('.nav-links a').forEach(a => {
+  a.addEventListener('click', () => {
+    document.getElementById('navLinks').classList.remove('open');
+    document.querySelector('.nav-burger').classList.remove('open');
+  });
+});
+</script>
+</body>
+</html>
