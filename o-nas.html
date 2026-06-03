@@ -473,7 +473,7 @@
   }
 
 
-  /* === GLOBAL NAV === */
+  
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
     display: flex; justify-content: space-between; align-items: center;
@@ -514,15 +514,121 @@
     .nav-links.open { display: flex; }
     .nav-links a { font-size: 1.1rem; }
   }
+
+  /* === SLIDE MENU === */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 48px;
+    background: rgba(245,240,232,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(45,74,45,0.12);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; color: #2d4a2d; text-decoration: none; z-index: 1001;
+  }
+  /* desktop links */
+  .nav-links {
+    display: flex; gap: 22px; list-style: none; align-items: center;
+  }
+  .nav-links a {
+    text-decoration: none; color: #5a6a5a;
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: #2d4a2d; }
+  .nav-cta {
+    background: #2d4a2d !important; color: #f5f0e8 !important;
+    padding: 9px 18px; border-radius: 2px;
+  }
+  .nav-cta:hover { background: #3d6b3d !important; }
+
+  /* burger button */
+  .nav-burger {
+    display: none; flex-direction: column; gap: 6px;
+    background: none; border: none; cursor: pointer;
+    padding: 4px; z-index: 1002;
+  }
+  .nav-burger span {
+    display: block; width: 26px; height: 2px;
+    background: #2d4a2d; border-radius: 2px;
+    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+    transform-origin: center;
+  }
+  .nav-burger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+  .nav-burger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .nav-burger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+  /* overlay */
+  .nav-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 999;
+    background: rgba(26,42,26,0.5);
+    backdrop-filter: blur(2px);
+    opacity: 0; transition: opacity 0.35s ease;
+  }
+  .nav-overlay.open { display: block; opacity: 1; }
+
+  /* side drawer */
+  .nav-drawer {
+    position: fixed; top: 0; right: 0; bottom: 0; z-index: 1001;
+    width: 280px;
+    background: #f5f0e8;
+    border-left: 1px solid rgba(45,74,45,0.12);
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+    display: flex; flex-direction: column;
+    padding: 80px 40px 40px;
+    box-shadow: -8px 0 32px rgba(26,42,26,0.15);
+  }
+  .nav-drawer.open { transform: translateX(0); }
+
+  .drawer-links {
+    list-style: none; display: flex; flex-direction: column; gap: 0; flex: 1;
+  }
+  .drawer-links li { border-bottom: 1px solid rgba(45,74,45,0.08); }
+  .drawer-links a {
+    display: block; padding: 18px 0;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; color: #2d4a2d; text-decoration: none;
+    transition: color 0.2s, padding-left 0.2s;
+  }
+  .drawer-links a:hover { color: #5a8f5a; padding-left: 8px; }
+
+  .drawer-cta {
+    display: block; margin-top: 32px;
+    background: #2d4a2d; color: #f5f0e8 !important;
+    padding: 16px 24px; border-radius: 2px; text-align: center;
+    font-family: 'Raleway', sans-serif; font-weight: 600;
+    font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase;
+    text-decoration: none; transition: background 0.2s;
+  }
+  .drawer-cta:hover { background: #3d6b3d !important; }
+
+  .drawer-tagline {
+    margin-top: 32px; padding-top: 24px;
+    border-top: 1px solid rgba(45,74,45,0.08);
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem; font-style: italic;
+    color: rgba(45,74,45,0.4); line-height: 1.6;
+  }
+
+  @media (max-width: 820px) {
+    nav { padding: 14px 20px; }
+    .nav-burger { display: flex; }
+    .nav-links { display: none; }
+  }
+
 </style>
 </head>
 <body>
 <nav>
   <a href="index.html" class="nav-logo">Дом в лесу</a>
-  <button class="nav-burger" onclick="toggleMenu()" aria-label="Меню">
+  <button class="nav-burger" id="navBurger" onclick="toggleDrawer()" aria-label="Меню">
     <span></span><span></span><span></span>
   </button>
-  <ul class="nav-links" id="navLinks">
+  <ul class="nav-links">
     <li><a href="programma.html">Программа</a></li>
     <li><a href="rasporyadok.html">Распорядок</a></li>
     <li><a href="pravila.html">Правила</a></li>
@@ -532,8 +638,21 @@
   </ul>
 </nav>
 
+<!-- overlay -->
+<div class="nav-overlay" id="navOverlay" onclick="closeDrawer()"></div>
 
-
+<!-- side drawer -->
+<div class="nav-drawer" id="navDrawer">
+  <ul class="drawer-links">
+    <li><a href="programma.html" onclick="closeDrawer()">Программа</a></li>
+    <li><a href="rasporyadok.html" onclick="closeDrawer()">Распорядок</a></li>
+    <li><a href="pravila.html" onclick="closeDrawer()">Правила</a></li>
+    <li><a href="o-nas.html" onclick="closeDrawer()">О нас</a></li>
+    <li><a href="novosti.html" onclick="closeDrawer()">Новости</a></li>
+  </ul>
+  <a href="kontakty.html" class="drawer-cta" onclick="closeDrawer()">Связаться с нами</a>
+  <div class="drawer-tagline">Мы рядом.<br>Но путь — твой.</div>
+</div>
 <!-- HERO -->
 <div class="hero">
   <div class="hero-bg"></div>
@@ -741,18 +860,28 @@
 </script>
 
 
+
 <script>
-function toggleMenu() {
-  const links = document.getElementById('navLinks');
-  const burger = document.querySelector('.nav-burger');
-  links.classList.toggle('open');
-  burger.classList.toggle('open');
+function toggleDrawer() {
+  var d = document.getElementById('navDrawer');
+  var o = document.getElementById('navOverlay');
+  var b = document.getElementById('navBurger');
+  var isOpen = d.classList.contains('open');
+  if (isOpen) { closeDrawer(); } else {
+    d.classList.add('open');
+    o.classList.add('open');
+    b.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
 }
-document.querySelectorAll('.nav-links a').forEach(a => {
-  a.addEventListener('click', () => {
-    document.getElementById('navLinks').classList.remove('open');
-    document.querySelector('.nav-burger').classList.remove('open');
-  });
+function closeDrawer() {
+  document.getElementById('navDrawer').classList.remove('open');
+  document.getElementById('navOverlay').classList.remove('open');
+  document.getElementById('navBurger').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeDrawer();
 });
 </script>
 </body>
