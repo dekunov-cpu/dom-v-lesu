@@ -2,6 +2,9 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Программа — Дом в лесу</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -18,6 +21,7 @@
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { color-scheme: light; }
   html { scroll-behavior: smooth; }
   body { font-family: 'Raleway', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
 
@@ -531,7 +535,7 @@
 </head>
 <body>
 <nav>
-  <a href="index.html" class="nav-logo">Дом в лесу</a>
+  <a href="index.html" class="nav-logo" style="display:flex;align-items:center;"><img src="data:image/png;base64,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" alt="Дом в лесу" style="height:40px;width:40px;object-fit:contain;margin-right:8px;flex-shrink:0">Дом в лесу</a>
   <button class="nav-burger" id="navBurger" onclick="toggleDrawer()" aria-label="Меню">
     <span></span><span></span><span></span>
   </button>
@@ -541,6 +545,8 @@
     <li><a href="pravila.html">Правила</a></li>
     <li><a href="o-nas.html">О нас</a></li>
     <li><a href="novosti.html">Новости</a></li>
+    <li><a href="otzyvy.html">Отзывы</a></li>
+    <li><a href="galereya.html">Галерея</a></li>
     <li><a href="kontakty.html" class="nav-cta">Связаться</a></li>
   </ul>
 </nav>
@@ -556,6 +562,8 @@
     <li><a href="pravila.html" onclick="closeDrawer()">Правила</a></li>
     <li><a href="o-nas.html" onclick="closeDrawer()">О нас</a></li>
     <li><a href="novosti.html" onclick="closeDrawer()">Новости</a></li>
+    <li><a href="otzyvy.html" onclick="closeDrawer()">Отзывы</a></li>
+    <li><a href="galereya.html" onclick="closeDrawer()">Галерея</a></li>
   </ul>
   <a href="kontakty.html" class="drawer-cta" onclick="closeDrawer()">Связаться с нами</a>
   <div class="drawer-tagline">Мы рядом.<br>Но путь — твой.</div>
@@ -579,7 +587,7 @@
 <!-- DURATION -->
 <div class="duration-band">
   <div class="dur-item">
-    <div class="dur-num">28</div>
+    <div class="dur-num">42</div>
     <div class="dur-label">дней программы</div>
   </div>
   <div class="dur-divider"></div>
@@ -594,7 +602,7 @@
   </div>
   <div class="dur-divider"></div>
   <div class="dur-item">
-    <div class="dur-num">59</div>
+    <div class="dur-num">65</div>
     <div class="dur-label">лет трезвости на всех</div>
   </div>
 </div>
@@ -677,7 +685,7 @@
       </div>
       <div class="element-body">
         <h3>Наставник в социуме</h3>
-        <p>Помогаем найти живого человека снаружи — в АА, НА или другом сообществе. Чтобы после выхода был кто-то рядом. Не потому что мы не доверяем — а потому что жизнь продолжается после 28 дней. И в ней нужна поддержка.</p>
+        <p>Помогаем найти живого человека снаружи — в АА, НА или другом сообществе. Чтобы после выхода был кто-то рядом. Не потому что мы не доверяем — а потому что жизнь продолжается после 42 дня. И в ней нужна поддержка.</p>
         <span class="element-note">До выхода из дома</span>
       </div>
     </div>
@@ -745,7 +753,7 @@
     <div class="result-text">
       <div class="section-eyebrow">Что происходит</div>
       <h2>Новые привычки<br>или <em>забытые старые</em></h2>
-      <p>28 дней — это не срок лечения. Это время чтобы тело и голова начали работать по-другому. Чтобы появился ритм, появилось ощущение что жизнь возможна без веществ.</p>
+      <p>42 дня — это не срок лечения. Это время чтобы тело и голова начали работать по-другому. Чтобы появился ритм, появилось ощущение что жизнь возможна без веществ.</p>
       <p>Человек уходит не вылеченным — но с инструментами. И с опытом того, каково это — жить трезво.</p>
     </div>
     <div class="result-items">
@@ -767,7 +775,7 @@
       </div>
       <div class="result-item">
         <div class="result-dot"></div>
-        <p>28 дней опыта — как это жить без веществ</p>
+        <p>42 дня опыта — как это жить без веществ</p>
       </div>
     </div>
   </div>
@@ -785,7 +793,18 @@
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-brand">Дом в лесу</div>
+  
+  <div style="margin-bottom:20px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
+    <a href="https://t.me/VIHODEST2025" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.08);color:#f5f0e8;padding:10px 20px;border-radius:2px;text-decoration:none;font-family:Raleway,sans-serif;font-size:0.78rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;transition:background 0.2s;border:1px solid rgba(255,255,255,0.12);" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.93 6.79l-1.68 7.92c-.12.56-.46.7-.92.43l-2.56-1.89-1.23 1.19c-.14.14-.26.26-.53.26l.19-2.65 4.85-4.38c.21-.19-.05-.29-.32-.1L7.68 14.35l-2.51-.79c-.55-.17-.56-.55.11-.82l9.78-3.77c.46-.17.86.11.87.82z" fill="#f5f0e8"/></svg>
+      Telegram
+    </a>
+    <a href="https://max.ru/join/odqQNAguLkO-Z0Agxsq0-Fv6m9d4EKKQuUm2KaLelCU" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.08);color:#f5f0e8;padding:10px 20px;border-radius:2px;text-decoration:none;font-family:Raleway,sans-serif;font-size:0.78rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;transition:background 0.2s;border:1px solid rgba(255,255,255,0.12);" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="rgba(255,255,255,0.1)"/><text x="3" y="17" font-family="Arial" font-weight="bold" font-size="10" fill="#f5f0e8">MAX</text></svg>
+      MAX
+    </a>
+  </div>
+<div class="footer-brand">Дом в лесу</div>
   <div class="footer-tag">Мы рядом. Но путь — твой.</div>
   <p>Бесплатная реабилитация · Кокошкино, Московская область<br>
   <a href="index.html">← Вернуться на главную</a></p>
